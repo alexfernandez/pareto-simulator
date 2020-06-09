@@ -7,6 +7,9 @@
     "test": "eslint .",
     "start": "node index.js"
   },
+  "bin": {
+	  "pareto": "index.js"
+  },
   "keywords": [
     "Pareto",
     "simulation",
