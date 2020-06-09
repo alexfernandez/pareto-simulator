@@ -9,6 +9,7 @@ const options = getopt({
     parallel: {key: 'p', args: 1, description: 'Requests in parallel', default: 1},
     series: {key: 's', args: 1, description: 'Consecutive requests', default: 1},
 })
+const intervals = 15
 
 class Simulation {
 	constructor() {
@@ -63,9 +64,33 @@ class Simulation {
 		console.log(`Average: ${average.toFixed(2)}, min: ${this.min.toFixed(2)}, max: ${this.max.toFixed(2)}`)
 		console.log(`Percentiles: ${JSON.stringify(percentiles, null, '\t')}`)
 	}
+
+	showGraph() {
+		const lxmin = Math.log(this.min)
+		const lxmax = Math.log(this.max)
+		const interval = (lxmax - lxmin) / intervals
+		const histogram = {}
+		const buckets = []
+		let ymax = 0
+		for (let i = 0; i < this.samples.length; i++) {
+			const lx = Math.log(this.samples[i])
+			const bucket = Math.floor((lx - lxmin) / interval)
+			buckets[bucket] = (buckets[bucket] || 0) + 1
+			if (buckets[bucket] > ymax) ymax = buckets[bucket]
+		}
+		const lymax = Math.log(ymax)
+		for (let i = 0; i < buckets.length; i++) {
+			const lx = Math.exp(lxmin + i * interval)
+			const ly = Math.log(buckets[i]) * 80 / lymax
+			histogram[lx] = ly
+			const label = String(Math.round(lx))
+			console.log(`${' '.repeat(10 - label.length)}${label} ${'*'.repeat(ly)}`)
+		}
+	}
 }
 
 const simulation = new Simulation()
 simulation.computeSamples()
 simulation.showStats()
+simulation.showGraph()
 
