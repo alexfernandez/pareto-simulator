@@ -2,12 +2,13 @@ const {getopt} = require('stdio')
 
 const percents = [5, 50, 90, 95, 99, 99.9]
 const options = getopt({
-    alpha: {key: 'a', args: 1, description: 'Alpha parameter for Pareto', default: 1.16},
-    xm: {key: 'x', args: 1, description: 'Xm (minimum) for Pareto', required: true},
-    number: {key: 'n', args: 1, description: 'Number of requests to simulate', default: 100000},
-    timeout: {key: 't', args: 1, description: 'Timeout', default: ''},
-    parallel: {key: 'p', args: 1, description: 'Requests in parallel', default: 1},
-    series: {key: 's', args: 1, description: 'Consecutive requests', default: 1},
+	alpha: {key: 'a', args: 1, description: 'Alpha parameter for Pareto', default: 1.16},
+	xm: {key: 'x', args: 1, description: 'Xm (minimum) for Pareto', required: true},
+	number: {key: 'n', args: 1, description: 'Number of requests to simulate', default: 100000},
+	timeout: {key: 't', args: 1, description: 'Timeout', default: ''},
+	parallel: {key: 'p', args: 1, description: 'Requests in parallel', default: 1},
+	series: {key: 's', args: 1, description: 'Consecutive requests', default: 1},
+	linear: {key: 'l', description: 'Show linear graph instead of log-log'},
 })
 const intervals = 15
 
@@ -66,26 +67,36 @@ class Simulation {
 	}
 
 	showGraph() {
-		const lxmin = Math.log(this.min)
-		const lxmax = Math.log(this.max)
+		const lxmin = this.forward(this.min)
+		const lxmax = this.forward(this.max)
 		const interval = (lxmax - lxmin) / intervals
 		const histogram = {}
 		const buckets = []
 		let ymax = 0
 		for (let i = 0; i < this.samples.length; i++) {
-			const lx = Math.log(this.samples[i])
+			const lx = this.forward(this.samples[i])
 			const bucket = Math.floor((lx - lxmin) / interval)
 			buckets[bucket] = (buckets[bucket] || 0) + 1
 			if (buckets[bucket] > ymax) ymax = buckets[bucket]
 		}
-		const lymax = Math.log(ymax)
+		const lymax = this.forward(ymax)
 		for (let i = 0; i < buckets.length; i++) {
-			const lx = Math.exp(lxmin + i * interval)
-			const ly = Math.log(buckets[i]) * 80 / lymax
-			histogram[lx] = ly
-			const label = String(Math.round(lx))
+			const x = this.reverse(lxmin + i * interval)
+			const ly = this.forward(buckets[i]) * 80 / lymax
+			histogram[x] = ly
+			const label = String(Math.round(x))
 			console.log(`${' '.repeat(10 - label.length)}${label} ${'*'.repeat(ly)}`)
 		}
+	}
+
+	forward(value) {
+		if (options.linear) return value
+		return Math.log(value)
+	}
+
+	reverse(value) {
+		if (options.linear) return value
+		return Math.exp(value)
 	}
 }
 
