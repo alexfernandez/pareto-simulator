@@ -1,0 +1,23 @@
+{
+  "name": "pareto-simulator",
+  "version": "0.0.1",
+  "description": "Simulates request times following a Pareto distribution",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint .",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "Pareto",
+    "simulation",
+    "distribution",
+    "statistics"
+  ],
+  "author": "alexfernandeznpm@gmail.com",
+  "dependencies": {
+    "stdio": "^2.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  }
+}
