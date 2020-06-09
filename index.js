@@ -60,7 +60,7 @@ class Simulation {
 		}
 		const average = this.sum / options.number
 		console.log(`Pareto distribution with xm=${options.xm} and alpha=${options.alpha}`)
-		console.log(`Server requests: ${options.series} calls in parallel, ${options.parallel} in parallel`)
+		console.log(`Server requests: ${options.series} calls in series, ${options.parallel} in parallel`)
 		console.log(`Average: ${average.toFixed(2)}, min: ${this.min.toFixed(2)}, max: ${this.max.toFixed(2)}`)
 		console.log(`Percentiles: ${JSON.stringify(percentiles, null, '\t')}`)
 	}
