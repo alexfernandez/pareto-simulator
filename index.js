@@ -9,6 +9,7 @@ const options = getopt({
 	parallel: {key: 'p', args: 1, description: 'Requests in parallel', default: 1},
 	series: {key: 's', args: 1, description: 'Consecutive requests', default: 1},
 	linear: {key: 'l', description: 'Show linear graph instead of log-log'},
+	error: {key: 'e', args: 1, description: 'Add randomly distributed errors', default: '0'},
 })
 const intervals = 15
 
@@ -48,7 +49,8 @@ class Simulation {
 
 	computePareto() {
 		const random = Math.random()
-		const sample = options.xm / (random ** (1 / options.alpha))
+		const error = options.error * Math.random()
+		const sample = options.xm / (random ** (1 / options.alpha)) + error
 		if (!options.timeout || sample <= options.timeout) return sample
 		return parseFloat(options.timeout) + this.computePareto()
 	}
