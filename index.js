@@ -47,12 +47,12 @@ class Simulation {
 		return sum
 	}
 
-	computePareto() {
+	computePareto(retryAccumulatedTime = 0) {
 		const random = Math.random()
 		const error = options.error * Math.random()
 		const sample = options.xm / (random ** (1 / options.alpha)) + error
-		if (!options.timeout || sample <= options.timeout) return sample
-		return parseFloat(options.timeout) + this.computePareto()
+		if (!options.timeout || sample <= options.timeout) return sample + retryAccumulatedTime
+		return this.computePareto(parseFloat(options.timeout) + retryAccumulatedTime)
 	}
 
 	showStats() {
