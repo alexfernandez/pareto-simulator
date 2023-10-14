@@ -1,4 +1,4 @@
-const {getopt} = require('stdio')
+import {getopt} from 'stdio'
 
 const percents = [5, 50, 90, 95, 99, 99.9]
 const options = getopt({

@@ -2,6 +2,7 @@
   "name": "pareto-simulator",
   "version": "0.0.1",
   "description": "Simulates request times following a Pareto distribution",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "eslint .",
